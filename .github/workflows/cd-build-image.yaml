@@ -44,13 +44,7 @@ jobs:
     needs: build-and-push
 
     steps:
-      - name: SSH and update containers
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: root
-          password: ${{ secrets.VPS_PASSWORD }}
-          script: |
-            cd /opt/twenty
-            docker compose pull
-            docker compose up -d --force-recreate server worker
+      - name: Trigger deploy webhook
+        run: |
+          curl -f -X POST https://deploy.megacode.com.br/deploy/twenty \
+            -H "Authorization: Bearer ${{ secrets.DEPLOY_SECRET }}"
